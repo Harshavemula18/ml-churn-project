@@ -1,0 +1,424 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ChurnIQ | Customer Churn Prediction</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      background: #0b1120;
+      color: #f8fafc;
+      font-family: Arial, sans-serif;
+      padding: 30px 16px;
+    }
+
+    .container {
+      max-width: 950px;
+      margin: auto;
+    }
+
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 50px;
+      gap: 12px;
+    }
+
+    .logo {
+      font-size: 25px;
+      font-weight: bold;
+    }
+
+    .logo span {
+      color: #34d399;
+    }
+
+    .tag {
+      font-size: 12px;
+      color: #34d399;
+      border: 1px solid #285d50;
+      padding: 8px 12px;
+      border-radius: 20px;
+    }
+
+    .hero {
+      margin-bottom: 30px;
+    }
+
+    .eyebrow {
+      color: #34d399;
+      font-size: 12px;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+    }
+
+    h1 {
+      font-size: clamp(34px, 6vw, 54px);
+      line-height: 1.12;
+      margin: 15px 0;
+    }
+
+    .hero p {
+      color: #a7b4c8;
+      line-height: 1.7;
+      max-width: 600px;
+    }
+
+    .layout {
+      display: grid;
+      grid-template-columns: 1.1fr 0.9fr;
+      gap: 22px;
+    }
+
+    .card {
+      background: #151f32;
+      border: 1px solid #29364b;
+      padding: 25px;
+      border-radius: 18px;
+    }
+
+    h2 {
+      font-size: 20px;
+      margin: 0 0 10px;
+    }
+
+    .description {
+      color: #9baac0;
+      font-size: 13px;
+      line-height: 1.6;
+      margin-bottom: 25px;
+    }
+
+    .fields {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px 14px;
+    }
+
+    label {
+      display: block;
+      font-size: 13px;
+      margin-bottom: 9px;
+      color: #dbe5f4;
+    }
+
+    input {
+      width: 100%;
+      padding: 13px;
+      background: #0b1120;
+      border: 1px solid #37465d;
+      color: white;
+      border-radius: 9px;
+      font-size: 15px;
+    }
+
+    input:focus {
+      outline: 2px solid #34d399;
+      outline-offset: 1px;
+    }
+
+    .hint {
+      display: block;
+      margin-top: 7px;
+      color: #8493aa;
+      font-size: 11px;
+    }
+
+    button {
+      width: 100%;
+      margin-top: 25px;
+      padding: 15px;
+      background: #34d399;
+      border: none;
+      border-radius: 9px;
+      font-size: 15px;
+      font-weight: bold;
+      color: #06271e;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background: #6ee7b7;
+    }
+
+    button:disabled {
+      opacity: 0.6;
+      cursor: wait;
+    }
+
+    .result {
+      background: #0b1120;
+      border: 1px dashed #43516a;
+      border-radius: 12px;
+      padding: 22px;
+      min-height: 180px;
+      overflow-wrap: anywhere;
+    }
+
+    .result-icon {
+      font-size: 30px;
+      margin-bottom: 14px;
+    }
+
+    .result-title {
+      font-size: 23px;
+      font-weight: bold;
+      line-height: 1.4;
+    }
+
+    .result-message {
+      margin-top: 12px;
+      font-size: 13px;
+      color: #a7b4c8;
+      line-height: 1.7;
+    }
+
+    .notice {
+      color: #8493aa;
+      font-size: 11px;
+      line-height: 1.7;
+      margin-top: 20px;
+    }
+
+    footer {
+      text-align: center;
+      color: #8493aa;
+      font-size: 12px;
+      margin-top: 30px;
+    }
+
+    @media (max-width: 700px) {
+      .layout {
+        grid-template-columns: 1fr;
+      }
+
+      header {
+        margin-bottom: 35px;
+      }
+
+      .card {
+        padding: 20px;
+      }
+    }
+
+    @media (max-width: 380px) {
+      .fields {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <main class="container">
+
+    <header>
+      <div class="logo">Churn<span>IQ</span></div>
+      <div class="tag">● ML Prediction Demo</div>
+    </header>
+
+    <section class="hero">
+      <div class="eyebrow">Customer Analytics · Machine Learning</div>
+
+      <h1>Predict churn.<br>Understand customers.</h1>
+
+      <p>
+        Enter customer subscription details and let a Decision Tree
+        machine-learning model predict whether the customer may
+        leave or stay.
+      </p>
+    </section>
+
+    <section class="layout">
+
+      <div class="card">
+        <h2>Customer Details</h2>
+
+        <p class="description">
+          Enter the four features used by your churn prediction model.
+        </p>
+
+        <form id="prediction-form">
+
+          <div class="fields">
+
+            <div>
+              <label for="monthly_charge">Monthly Charge</label>
+              <input
+                id="monthly_charge"
+                type="number"
+                min="0"
+                step="any"
+                placeholder="e.g. 75"
+                required
+              >
+              <span class="hint">Monthly subscription cost</span>
+            </div>
+
+            <div>
+              <label for="months_as_customer">Customer Tenure</label>
+              <input
+                id="months_as_customer"
+                type="number"
+                min="0"
+                step="1"
+                placeholder="e.g. 8"
+                required
+              >
+              <span class="hint">Months as a customer</span>
+            </div>
+
+            <div>
+              <label for="support_tickets">Support Tickets</label>
+              <input
+                id="support_tickets"
+                type="number"
+                min="0"
+                step="1"
+                placeholder="e.g. 4"
+                required
+              >
+              <span class="hint">Number of support tickets</span>
+            </div>
+
+            <div>
+              <label for="weekly_usage_hours">Weekly Usage</label>
+              <input
+                id="weekly_usage_hours"
+                type="number"
+                min="0"
+                step="any"
+                placeholder="e.g. 3"
+                required
+              >
+              <span class="hint">Hours used per week</span>
+            </div>
+
+          </div>
+
+          <button id="predict-button" type="submit">
+            Predict Customer Churn →
+          </button>
+
+        </form>
+      </div>
+
+      <div class="card">
+        <h2>Prediction Result</h2>
+
+        <p class="description">
+          The output from your trained model will appear below.
+        </p>
+
+        <div class="result" aria-live="polite">
+          <div class="result-icon" id="result-icon">✦</div>
+
+          <div class="result-title" id="result-title">
+            Ready to Predict
+          </div>
+
+          <div class="result-message" id="result-message">
+            Fill in the customer details and click the prediction button.
+          </div>
+        </div>
+
+        <p class="notice">
+          This is an educational machine-learning demo. Predictions
+          depend on the training dataset and are not guaranteed to
+          be correct. Do not rely on this result alone for real
+          customer decisions.
+        </p>
+      </div>
+
+    </section>
+
+    <footer>
+      Built with Python · Pandas · Scikit-learn · Vercel
+    </footer>
+
+  </main>
+
+  <script>
+    const form = document.getElementById("prediction-form");
+    const button = document.getElementById("predict-button");
+
+    const resultIcon = document.getElementById("result-icon");
+    const resultTitle = document.getElementById("result-title");
+    const resultMessage = document.getElementById("result-message");
+
+    form.addEventListener("submit", async function (event) {
+      event.preventDefault();
+
+      if (!form.reportValidity()) {
+        return;
+      }
+
+      const payload = {
+        monthly_charge: Number(
+          document.getElementById("monthly_charge").value
+        ),
+        months_as_customer: Number(
+          document.getElementById("months_as_customer").value
+        ),
+        support_tickets: Number(
+          document.getElementById("support_tickets").value
+        ),
+        weekly_usage_hours: Number(
+          document.getElementById("weekly_usage_hours").value
+        )
+      };
+
+      button.disabled = true;
+      button.textContent = "Predicting...";
+
+      resultIcon.textContent = "⏳";
+      resultTitle.textContent = "Making Prediction";
+      resultMessage.textContent = "Connecting to the Python model...";
+
+      try {
+        const response = await fetch("/api/predict", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify(payload)
+        });
+
+        const data = await response.json();
+
+        if (!response.ok) {
+          throw new Error(
+            data.error || "The prediction request failed."
+          );
+        }
+
+        resultTitle.textContent = data.result;
+        resultMessage.textContent = data.explanation;
+
+        resultIcon.textContent =
+          data.prediction === 1 ? "⚠️" : "✅";
+
+      } catch (error) {
+        resultIcon.textContent = "❌";
+        resultTitle.textContent = "Prediction Failed";
+        resultMessage.textContent =
+          error.message +
+          " Please check the Python API and deployment logs.";
+
+      } finally {
+        button.disabled = false;
+        button.textContent = "Predict Customer Churn →";
+      }
+    });
+  </script>
+</body>
+</html>
