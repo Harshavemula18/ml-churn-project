@@ -1,14 +1,11 @@
-{
+<escape>{
   "$schema": "https://openapi.vercel.sh/vercel.json",
-  "rewrites": [
-    {
-      "source": "/",
-      "destination": "/index.html"
-    }
-  ],
   "functions": {
     "api/predict.py": {
-      "includeFiles": "customer_churn.csv"
+      "includeFiles": [
+        "customer_churn.csv",
+        "index.html"
+      ]
     }
   }
-}
+}</escape>
